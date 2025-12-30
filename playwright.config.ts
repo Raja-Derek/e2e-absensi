@@ -28,23 +28,6 @@ export default defineConfig({
   },
   reporter: [
     ['list'],
-    [
-      'playwright-qase-reporter',
-      {
-        mode: 'testops',
-        debug: false,
-        testops: {
-          api: {
-            token: process.env.QASE_API_TOKEN,
-          },
-          project: process.env.QASE_PROJECT_CODE, // Replace <DEMO> with your project code
-          uploadAttachments: true,
-          run: {
-            complete: true,
-          },
-        },
-      },
-    ],
     ['allure-playwright', {
       outputFolder: 'allure-results',
       detail: true,
