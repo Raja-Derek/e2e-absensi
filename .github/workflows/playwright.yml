@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: 🌌 CYBERPUNK // PLAYWRIGHT OPS
 
 on:
   push:
@@ -6,77 +6,98 @@ on:
   pull_request:
     branches: [ main, develop ]
   repository_dispatch:
-    types: [automation-amp-updated]
+    types: [web-updated]
 
 permissions:
   contents: write
 
 jobs:
-  playwright:
+  cyber_ops:
     runs-on: ubuntu-latest
     environment: Stage
 
     steps:
-      - name: Checkout repository
+      - name: 🔮 Booting Neon Console
+        run: |
+          echo -e "\033[36m"
+          echo " ██████╗██╗   ██╗██████╗ ███████╗██████╗ "
+          echo "██╔════╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗"
+          echo "██║      ╚████╔╝ ██████╔╝█████╗  ██████╔╝"
+          echo "██║       ╚██╔╝  ██╔══██╗██╔══╝  ██╔══██╗"
+          echo "╚██████╗   ██║   ██████╔╝███████╗██║  ██║"
+          echo " ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝"
+          echo -e "\033[0m"
+          echo -e "\033[32m[+] Neural interface online\033[0m"
+          sleep 1
+
+      - name: 🧾 Syncing Source Matrix
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: ⚙️ Injecting Node Runtime
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Cache node_modules
+      - name: 🧠 Restoring Dependency Cache
         uses: actions/cache@v4
         with:
           path: node_modules
           key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - name: Cache Playwright browsers
+      - name: 🛰️ Restoring Browser Arsenal
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - name: Install dependencies
-        run: npm ci
+      - name: 📦 Downloading Modules
+        run: |
+          echo -e "\033[36m[*] Fetching external modules...\033[0m"
+          npm ci
+          echo -e "\033[32m[✓] Modules synchronized\033[0m"
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      - name: 🌐 Deploying Browser Engines
+        run: |
+          echo -e "\033[33m[*] Installing headless browser cores...\033[0m"
+          npx playwright install --with-deps
+          echo -e "\033[32m[✓] Browser engines armed\033[0m"
 
-      - name: Cleanup old Qase runs
-        run: node tests/utils/qase-cleanup.mjs
-        env:
-          QASE_PROJECT_CODE: ${{ vars.QASE_PROJECT_CODE }}
-          QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
-
-      - name: Run Playwright tests
+      - name: ⚡ Execute Cyber Tests
         env:
           BASE_URL: ${{ vars.BASE_URL }}
-          LOGIN_EMAIL: ${{ vars.LOGIN_EMAIL }}
-          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
-          QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
-          QASE_PROJECT_CODE: ${{ vars.QASE_PROJECT_CODE }}
+          SUPERVISOR_EMAIL: ${{ vars.SUPERVISOR_EMAIL }}
+          SUPERVISOR_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
+          DIRUT_EMAIL: ${{ vars.DIRUT_EMAIL }}
+          DIRUT_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
+          HR_EMAIL: ${{ vars.HR_EMAIL }}
+          HR_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
+          ADMIN_EMAIL: ${{ vars.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
+        run: |
+          echo -e "\033[35m[⚡] Initiating automated strike sequence...\033[0m"
+          npx playwright test
+          echo -e "\033[32m[✓] Test execution completed\033[0m"
 
-        run: npx playwright test
-      
-      - name: Generate Allure Report
+      - name: 🧬 Compile Allure Intelligence
         if: always()
         run: |
+          echo -e "\033[36m[*] Compiling visual intelligence report...\033[0m"
           npm install -g allure-commandline
           allure generate allure-results --clean -o allure-report
+          echo -e "\033[32m[✓] Allure report generated\033[0m"
 
-      - name: Deploy Allure Report to GitHub Pages
+      - name: 🌍 Publish to Neon Grid
         uses: peaceiris/actions-gh-pages@v4
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-report
 
-      - name: Package Playwright artifacts (report + traces)
+      - name: 📡 Package Digital Evidence
         if: always()
         run: |
           set -eux
-          # create a zip containing the Playwright report and any test-results
+          echo -e "\033[36m[*] Packaging operation artifacts...\033[0m"
           rm -f playwright-artifacts.zip || true
           if [ -d playwright-report ]; then
             zip -r playwright-artifacts.zip playwright-report || true
@@ -84,17 +105,18 @@ jobs:
           if [ -d test-results ]; then
             zip -r playwright-artifacts.zip test-results || true
           fi
+          echo -e "\033[32m[✓] Evidence secured\033[0m"
 
-      - name: Upload Playwright artifacts
+      - name: 🗄️ Upload Artifact Vault
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-artifacts
+          name: cyberpunk-artifacts
           path: playwright-artifacts.zip
 
-      - name: Upload Playwright report
+      - name: 📊 Upload Visual Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: cyberpunk-playwright-report
           path: playwright-report/
