@@ -45,7 +45,7 @@ async function createStorageState(roleName: string, email: string, password: str
   await page.getByRole('textbox', { name: 'Password' }).fill(password);
   await page.getByRole('button', { name: 'Masuk' }).click();
 
-
+  await page.waitForTimeout(5000); // wait for 5 seconds to ensure login is processed
   await page.waitForURL(/.*dashboard/);
 
   // Save storage state
